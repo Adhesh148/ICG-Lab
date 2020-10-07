@@ -1,7 +1,6 @@
 /******************************************
 * AUTHOR : AdheshR *
-* Problem Description: Implement Boundary Fill algorithm(with 4 neighbours) to display boundary of  one rectangle and one triangle, given vertices, in red colour and then fill the rectangle
- 						with blue and triangle with yellow when the mouse click is  done inside the regions. *
+* Problem Description: Draw Rectangle in Red colour, and implement the Flood Fill  algorithm to replace the red colour region to green colour when a mouse click is done at a point inside the rectangle *
 *TODO : Transalation of mouse/world coordinates to window coordinates and vice-versa seems a bit problematic for other quadrants. Have to check that. *
 ******************************************/
 #include <bits/stdc++.h>
@@ -23,10 +22,8 @@ void winReshapeFcn (GLint newWidth, GLint newHeight);
 // coordinates of rectangle
 int rect_x1, rect_y1;
 int rect_x2, rect_y2;
-// coordinates of the triangle
-int tr_x1, tr_y1;
-int tr_x2, tr_y2;
-int tr_x3, tr_y3;
+int rect_x3, rect_y3;
+int rect_x4, rect_y4;
 
 // window parameters
 GLsizei winWidth = 1000, winHeight = 700;
@@ -45,44 +42,42 @@ struct Color
 			return 0;
 		return 1;
 	}
+	// Overload "equal to" operator
+	bool operator==(const Color& color)
+	{
+		if(r == color.r && g == color.g && b == color.b)
+			return 1;
+		return 0;
+	}
 };
 
-// define global bndColor
-Color bColor;
-Color fColor;
+// define global Colors
+Color pColor;
+Color nColor;
 
 Color getPixelColor(int x, int y);
-
-void drawRectBoundary(int x1,int y1, int x2, int y2);
-void drawTriangleBoundary(int x1, int y1, int x2, int y2, int x3, int y3);
-
-void boundaryFill_4N(int x, int y, Color fillColor, Color bColor);
+void drawRectangle(int x1,int y1, int x2, int y2,int x3, int y3,int x4, int y4);
 void drawPoint(int x,int y, Color fillColor);
-
 int validateSeed(int x, int y);
+void floodFill(int x, int y, Color prevColor, Color newColor);
 float area(int x1, int y1, int x2, int y2, int x3, int y3);
 
 int main(int argc, char **argv)
 {
-	printf("\n******************** Welcome to Boundary Fill Algorithm Visualizer ***********************\n\n");
-	printf("Visualize the Boundary Fill Algorithm for a Rectangle and a Triangle.\n");
+	printf("\n******************** Welcome to Flood Fill Algorithm Visualizer ***********************\n\n");
+	printf("Visualize the Flood Fill Algorithm for a Rectangle\n");
 	printf("\nPlease Note: All coordinates must be strictly greater than (0,0) - i.e., they must lie in the first quadrant\n");
 
 	// Take Input Values
 	printf("\n[DRAW RECTANGLE]\n");
 	printf("Enter a coordinates of the rectangle.\n");
 	scanf("%d %d",&rect_x1,&rect_y1);
-	printf("Enter the diagonally opposite coordinates of the rectangle.\n");
+	printf("Enter the second coordinates of the rectangle.\n");
 	scanf("%d %d",&rect_x2,&rect_y2);
-
-	// Input coordinates of the triangle
-	printf("\n[DRAW TRAINGLE]\n");
-	printf("Enter the first coordinates of the triangle.\n");
-	scanf("%d %d",&tr_x1,&tr_y1);
-	printf("Enter the second coordinates of the triangle.\n");
-	scanf("%d %d",&tr_x2,&tr_y2);
-	printf("Enter the third coordinates of the triangle.\n");
-	scanf("%d %d",&tr_x3,&tr_y3);
+	printf("Enter the third coordinates of the rectangle.\n");
+	scanf("%d %d",&rect_x3,&rect_y3);
+	printf("Enter the second coordinates of the rectangle.\n");
+	scanf("%d %d",&rect_x4,&rect_y4);
 	
 	// Initialise GLUT
 	glutInit(&argc,argv);
@@ -93,7 +88,7 @@ int main(int argc, char **argv)
 	// Set the window size					
 	glutInitWindowSize(winWidth,winHeight);
 	// Create display window 						
-	glutCreateWindow("Boundary Fill");
+	glutCreateWindow("Flood Fill");
 
 	// Execute Initialization procedure
 	init();
@@ -121,69 +116,53 @@ void init()
 // A void Display Function
 void myDisplay()
 {
-	// define the colors for the boundary - red (in this question)
-	bColor.r = 1.0;
-	bColor.g = 0.0;
-	bColor.b = 0.0;
+	// define the initial color - red
+	pColor.r = 1.0;
+	pColor.g = 0.0;
+	pColor.b = 0.0;
 
-	// define fill colors
-	fColor.r = 1.0;
-	fColor.g = 1.0;
-	fColor.b = 0.0;
+	// define flood fill color - green
+	nColor.r = 0.0;
+	nColor.g = 1.0;
+	nColor.b = 0.0;
 	
 	// First lets draw the boundary of the rectangle
-	drawRectBoundary(rect_x1,rect_y1,rect_x2,rect_y2);
-
-	// Now lets draw the boundary of the triangle
-	drawTriangleBoundary(tr_x1,tr_y1,tr_x2,tr_y2,tr_x3,tr_y3);
+	drawRectangle(rect_x1,rect_y1,rect_x2,rect_y2,rect_x3,rect_y3,rect_x4,rect_y4);
 
 	glutSwapBuffers();
 }
 
-// Boundary Fill Algorithm with 4 neighbors
-void boundaryFill_4N(int x, int y, Color fillColor, Color boundaryColor)
+// Flood Fill Algorithm
+void floodFill(int x, int y, Color prevColor, Color newColor)
 {
 	Color currColor = getPixelColor(x,y);
-	if(currColor != boundaryColor && currColor != fillColor)
+	if(currColor == pColor)
 	{
-		drawPoint(x,y,fillColor);
-		boundaryFill_4N(x+1,y,fillColor,boundaryColor);
-		boundaryFill_4N(x,y+1,fillColor,boundaryColor);
-		boundaryFill_4N(x-1,y,fillColor,boundaryColor);
-		boundaryFill_4N(x,y-1,fillColor,boundaryColor);
+		drawPoint(x,y,nColor);
+		floodFill(x+1,y,pColor,nColor);
+		floodFill(x,y+1,pColor,nColor);
+		floodFill(x-1,y,pColor,nColor);
+		floodFill(x,y-1,pColor,nColor);
+		floodFill(x+1,y+1,pColor,nColor);
+		floodFill(x+1,y-1,pColor,nColor);
+		floodFill(x-1,y-1,pColor,nColor);
+		floodFill(x-1,y+1,pColor,nColor);
 	}
 }
 
 // Rectangle Draw Function
-void drawRectBoundary(int x1,int y1, int x2, int y2)
+void drawRectangle(int x1,int y1, int x2, int y2,int x3, int y3,int x4, int y4)
 {
 	// set the boundary colors
-	glColor3f(bColor.r,bColor.g,bColor.b);
-	// set fill style - color only boundaries
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glColor3f(pColor.r,pColor.g,pColor.b);
+	// solid fill
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// Draw Rectangle
-	glBegin(GL_POLYGON);
-		glVertex2i(x1,y1);
-		glVertex2i(x2,y1);
-		glVertex2i(x2,y2);
-		glVertex2i(x1,y2);
-	glEnd();
-
-	glutSwapBuffers();
-}
-
-// Triangle Draw Function
-void drawTriangleBoundary(int x1, int y1, int x2, int y2, int x3, int y3)
-{
-	// set the boundary colors
-	glColor3f(bColor.r,bColor.g,bColor.b);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	// Draw the triangle
 	glBegin(GL_POLYGON);
 		glVertex2i(x1,y1);
 		glVertex2i(x2,y2);
 		glVertex2i(x3,y3);
+		glVertex2i(x4,y4);
 	glEnd();
 
 	glutSwapBuffers();
@@ -213,12 +192,11 @@ void mouseFcn(GLint button, GLint action, GLint x, GLint y)
 		case GLUT_LEFT_BUTTON:
 			if(action == GLUT_DOWN)
 			{
-				// printf("%d %d\n",cx,cy);
 				// give an initial validation to check if the seed point is within the triangle or rectangle
 				if(validateSeed(cx,cy) == 1)
-					boundaryFill_4N(cx,cy,fColor,bColor);
+					floodFill(cx, cy, pColor, nColor);
 				else
-					printf("[BOUNDARY FILL] selected seed point is not within any shape.\n");
+					printf("[BOUNDARY FILL] selected seed point is not within the rectangle.\n");
 			}
 			break;
 		default:
@@ -235,6 +213,7 @@ Color getPixelColor(int cx, int cy)
 	return color;
 }
 
+// Window reshape - utitlity
 void winReshapeFcn (GLint newWidth, GLint newHeight)
 {
 	/* Reset viewport and projection parameters */
@@ -250,33 +229,30 @@ void winReshapeFcn (GLint newWidth, GLint newHeight)
 // Validation function - to check if seed point is within one of the shapes
 int validateSeed(int x, int y)
 {
-	// check if seed is within rectangle
-	// Fix the bottom-left and top-right points
-	int bl_x,bl_y, rl_x, rl_y;
-	bl_x = rect_x1,	bl_y = rect_y1, rl_x = rect_x2,rl_y = rect_y2;
-	if(rect_x2 < rect_x1)
-	{	
-		rl_x = rect_x1; rl_y = rect_y1;
-		bl_y = rect_x2; bl_y = rect_y2;
-	}
+	/* Calculate area of rectangle ABCD */
+    float A = area(rect_x1, rect_y1, rect_x2, rect_y2, rect_x3, rect_y3) +  
+              area(rect_x1, rect_y1, rect_x4, rect_y4, rect_x3, rect_y3); 
+  
+    /* Calculate area of triangle PAB */
+    float A1 = area(x, y, rect_x1, rect_y1, rect_x2, rect_y2); 
+  
+    /* Calculate area of triangle PBC */
+    float A2 = area(x, y, rect_x2, rect_y2, rect_x3, rect_y3); 
+  
+    /* Calculate area of triangle PCD */
+    float A3 = area(x, y, rect_x3, rect_y3, rect_x4, rect_y4); 
+  
+    /* Calculate area of triangle PAD */
+    float A4 = area(x, y, rect_x1, rect_y1, rect_x4, rect_y4); 
+  
+    /* Check if sum of A1, A2, A3 and A4  
+       is same as A */
+    return (A == A1 + A2 + A3 + A4); 
 
-	if (x > bl_x && x < rl_x && y > bl_y && y < rl_y) 
-        return 1;
- 
-
-	// check if seed is within triangle
-	float area_full = area(tr_x1,tr_y1,tr_x2,tr_y2,tr_x3,tr_y3);
-	float area_1 = area(x,y,tr_x2,tr_y2,tr_x3,tr_y3);
-	float area_2 = area(tr_x1,tr_y1,x,y,tr_x3,tr_y3);
-	float area_3 = area(tr_x1,tr_y1,tr_x2,tr_y2,x,y);
-
-	if(area_full == area_1 + area_2 + area_3)
-		return 1;
-
-	return 0;
+	
 }
 
-// Helper function
+// Helper Function
 float area(int x1, int y1, int x2, int y2, int x3, int y3) 
 { 
    return abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0); 

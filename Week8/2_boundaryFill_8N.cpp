@@ -1,8 +1,8 @@
 /******************************************
 * AUTHOR : AdheshR *
-* Problem Description: Implement Boundary Fill algorithm(with 4 neighbours) to display boundary of  one rectangle and one triangle, given vertices, in red colour and then fill the rectangle
+* Problem Description: Implement Boundary Fill algorithm(with 8 neighbours) to display boundary of  one rectangle and one triangle, given vertices, in red colour and then fill the rectangle
  						with blue and triangle with yellow when the mouse click is  done inside the regions. *
-*TODO : Transalation of mouse/world coordinates to window coordinates and vice-versa seems a bit problematic for other quadrants. Have to check that. *
+*TODO : Transalation of mouse/world coordinates to window coordinates and vice-versa seems a bit problematic for other quadrants. Have to check that. + Check for leaks *
 ******************************************/
 #include <bits/stdc++.h>
 using namespace std;
@@ -56,7 +56,7 @@ Color getPixelColor(int x, int y);
 void drawRectBoundary(int x1,int y1, int x2, int y2);
 void drawTriangleBoundary(int x1, int y1, int x2, int y2, int x3, int y3);
 
-void boundaryFill_4N(int x, int y, Color fillColor, Color bColor);
+void boundaryFill_8N(int x, int y, Color fillColor, Color bColor);
 void drawPoint(int x,int y, Color fillColor);
 
 int validateSeed(int x, int y);
@@ -140,17 +140,21 @@ void myDisplay()
 	glutSwapBuffers();
 }
 
-// Boundary Fill Algorithm with 4 neighbors
-void boundaryFill_4N(int x, int y, Color fillColor, Color boundaryColor)
+// Boundary Fill Algorithm with 8 neighbors - check for leaks
+void boundaryFill_8N(int x, int y, Color fillColor, Color boundaryColor)
 {
 	Color currColor = getPixelColor(x,y);
 	if(currColor != boundaryColor && currColor != fillColor)
 	{
 		drawPoint(x,y,fillColor);
-		boundaryFill_4N(x+1,y,fillColor,boundaryColor);
-		boundaryFill_4N(x,y+1,fillColor,boundaryColor);
-		boundaryFill_4N(x-1,y,fillColor,boundaryColor);
-		boundaryFill_4N(x,y-1,fillColor,boundaryColor);
+		boundaryFill_8N(x+1,y,fillColor,boundaryColor);
+		boundaryFill_8N(x,y+1,fillColor,boundaryColor);
+		boundaryFill_8N(x-1,y,fillColor,boundaryColor);
+		boundaryFill_8N(x,y-1,fillColor,boundaryColor);
+		boundaryFill_8N(x+1,y+1,fillColor,boundaryColor);
+		boundaryFill_8N(x+1,y-1,fillColor,boundaryColor);
+		boundaryFill_8N(x-1,y-1,fillColor,boundaryColor);
+		boundaryFill_8N(x-1,y+1,fillColor,boundaryColor);
 	}
 }
 
@@ -213,10 +217,9 @@ void mouseFcn(GLint button, GLint action, GLint x, GLint y)
 		case GLUT_LEFT_BUTTON:
 			if(action == GLUT_DOWN)
 			{
-				// printf("%d %d\n",cx,cy);
 				// give an initial validation to check if the seed point is within the triangle or rectangle
 				if(validateSeed(cx,cy) == 1)
-					boundaryFill_4N(cx,cy,fColor,bColor);
+					boundaryFill_8N(cx,cy,fColor,bColor);
 				else
 					printf("[BOUNDARY FILL] selected seed point is not within any shape.\n");
 			}
@@ -235,6 +238,7 @@ Color getPixelColor(int cx, int cy)
 	return color;
 }
 
+// Window reshape - utility function
 void winReshapeFcn (GLint newWidth, GLint newHeight)
 {
 	/* Reset viewport and projection parameters */
@@ -250,8 +254,8 @@ void winReshapeFcn (GLint newWidth, GLint newHeight)
 // Validation function - to check if seed point is within one of the shapes
 int validateSeed(int x, int y)
 {
-	// check if seed is within rectangle
-	// Fix the bottom-left and top-right points
+	/* check if seed is within rectangle
+	 Fix the bottom-left and top-right points */
 	int bl_x,bl_y, rl_x, rl_y;
 	bl_x = rect_x1,	bl_y = rect_y1, rl_x = rect_x2,rl_y = rect_y2;
 	if(rect_x2 < rect_x1)

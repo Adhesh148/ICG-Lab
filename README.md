@@ -28,8 +28,8 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 > To understand the faster rasterization  of closed curves such as circle and ellipse, by avoiding floating point operation. Implemented **Mid-pt Circle** and **Mid-point Ellipse** drawing algorithms.
 
 * [Week-8](Week8/)
-> To Learn Interactive Computer Graphics. Implemented Boundary Fill with 4 neighbors with interactive seed point obtained on mouse click. There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first.  <br />
-> TODO : Boundary Fill with 8 neighbors & Flood Fill.
+> To Learn Interactive Computer Graphics. Implemented **Boundary Fill with 4 neighbors**, **Boundary Fill with 8 neighbors** and **Flood Fill Algorithm** with interactive seed point obtained on mouse click. There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first.  <br />
+> TODO : Check for Leaks in Boundary with 8 neighbors & Fix the Coordinate Issue (Mouse vs Window).
 
 * [Week-9](Week9/)
 > TODO: PolyFill.
