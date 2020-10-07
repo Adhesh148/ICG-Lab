@@ -15,7 +15,7 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 > Introduces OpenGL library in C. Contains codes to draw a house and a car using combination of primitives. Circle algo should be tuned.
 
 
-## Pre-requiste
+## Pre-requisite
 
 ## Running the codes
 
