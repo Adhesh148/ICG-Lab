@@ -1,5 +1,7 @@
 /******************************************
 * AUTHOR : AdheshR *
+* Problem Description: Implement Midpoint line drawing algorithm and display one line segment in each of the eight octants *
+* TODO : For all 8 octants. Done for the first *
 ******************************************/
 #include <bits/stdc++.h>
 using namespace std;

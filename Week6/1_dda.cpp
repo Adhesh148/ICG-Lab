@@ -1,5 +1,6 @@
 /******************************************
 * AUTHOR : AdheshR *
+* Problem Description: Implement DDA algorithm for drawing straight line and observe how the lines are drawn when the slope is close to 0, and also when close to infinity *
 ******************************************/
 #include <bits/stdc++.h>
 using namespace std;

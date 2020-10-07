@@ -14,10 +14,40 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 * [Week-3](Week3/)
 > Introduces OpenGL library in C. Contains codes to draw a house and a car using combination of primitives. Circle algo should be tuned.
 
+* [Week-4](Week4/)
+> Simulation of Printing with and without Error Diffusion.
+> Implemented **Flyod Steinberg Error Diffusion Algorithm**.
+> TODO: Understand local average absolute error. (Not sure of the formula)
+
+* [Week-5](Week5/)
+> To learn rasterisation(scan conversion or sampling) using OpenGL. 
+> Implemeneted **brute force line drawing** and **brute force ellipse drawing** algorithms.
+
+* [Week-6](Week6/)
+> To understand the faster rasterisation by avoiding floating point operation.
+> Implemented **DDA** and **Midpoint Line Drawing Algorithm**.
+
+* [Week-7](Week7/)
+> To understand the faster rasterisation  of closed curves such as circle and ellipse, by avoiding floating point operation. 
+> Implemented **Mid-pt Circle** and **Mid-pt Ellipse** drawing algorithms.
+
+* [Week-8](Week8/)
+> To Learn Interactive Computer Graphics. Implemented Boundary Fill with 4 neighbors with interactive seed point obtained on mouse click. 
+> There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first. 
+> TODO : Boundary Fill with 8 neighbors & Flood Fill.
+
+* [Week-9](Week9/)
+> TODO: PolyFill.
+
 
 ## Pre-requisite
+* OpenGL
+* grpahics.h (Only for one lab - I would recommend not to install, it's pretty tediuos and outdated)
+* Python + OpenCv (cv2) (Again used only in Week 4 exercise - was lazy to do it in C/C++)
 
 ## Running the codes
 
-g++ -o out 1_lineRaster_brute.cpp -lGL -lGLU -lglut -lm
-
+To run OpenGL codes
+```g++ -o out filename.cpp -lGL -lGLU -lglut -lm```  
+OR
+```gcc -o out filename.c -lGL -lGLU -lglut -lm```

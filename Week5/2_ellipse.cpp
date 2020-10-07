@@ -1,5 +1,7 @@
 /******************************************
 * AUTHOR : AdheshR *
+* Problem Description: Given the parameter of a  and b of ellipse x= a cos(theta); y= b sin(theta), plot the points (round(x), round(y)) for theta varies from 0 to 2*PI, with various  
+						step sizes and observe the quality of the plot. Also check if  circle is plotted when a=b.
 ******************************************/
 #include <bits/stdc++.h>
 using namespace std;

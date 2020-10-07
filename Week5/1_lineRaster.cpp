@@ -1,5 +1,6 @@
 /******************************************
 * AUTHOR : AdheshR *
+* Problem Description: Brute force line drawing algorithm. *
 ******************************************/
 #include <bits/stdc++.h>
 using namespace std;
