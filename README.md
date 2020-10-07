@@ -15,25 +15,20 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 > Introduces OpenGL library in C. Contains codes to draw a house and a car using combination of primitives. Circle algo should be tuned.
 
 * [Week-4](Week4/)
-> Simulation of Printing with and without Error Diffusion. <br />
-> Implemented **Flyod Steinberg Error Diffusion Algorithm**. <br />
+> Simulation of Printing with and without Error Diffusion. Implemented **Flyod Steinberg Error Diffusion Algorithm**. <br />
 > TODO: Understand local average absolute error. (Not sure of the formula)
 
 * [Week-5](Week5/)
-> To learn rasterization(scan conversion or sampling) using OpenGL. <br />
-> Implemented **brute force line drawing** and **brute force ellipse drawing** algorithms.
+> To learn rasterization(scan conversion or sampling) using OpenGL. Implemented **brute force line drawing** and **brute force ellipse drawing** algorithms.
 
 * [Week-6](Week6/)
-> To understand the faster rasterization by avoiding floating point operation. <br />
-> Implemented **DDA** and **Midpoint Line Drawing Algorithm**.
+> To understand the faster rasterization by avoiding floating point operation. Implemented **DDA** and **Midpoint Line Drawing Algorithm**.
 
 * [Week-7](Week7/)
-> To understand the faster rasterization  of closed curves such as circle and ellipse, by avoiding floating point operation. <br />
-> Implemented **Mid-pt Circle** and **Mid-point Ellipse** drawing algorithms.
+> To understand the faster rasterization  of closed curves such as circle and ellipse, by avoiding floating point operation. Implemented **Mid-pt Circle** and **Mid-point Ellipse** drawing algorithms.
 
 * [Week-8](Week8/)
-> To Learn Interactive Computer Graphics. Implemented Boundary Fill with 4 neighbors with interactive seed point obtained on mouse click. <br />
-> There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first. <br />
+> To Learn Interactive Computer Graphics. Implemented Boundary Fill with 4 neighbors with interactive seed point obtained on mouse click. There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first.  <br />
 > TODO : Boundary Fill with 8 neighbors & Flood Fill.
 
 * [Week-9](Week9/)
