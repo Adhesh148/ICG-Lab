@@ -18,3 +18,6 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 ## Pre-requiste
 
 ## Running the codes
+
+g++ -o out 1_lineRaster_brute.cpp -lGL -lGLU -lglut -lm
+
