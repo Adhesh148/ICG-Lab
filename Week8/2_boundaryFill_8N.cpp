@@ -23,6 +23,8 @@ void winReshapeFcn (GLint newWidth, GLint newHeight);
 // coordinates of rectangle
 int rect_x1, rect_y1;
 int rect_x2, rect_y2;
+int rect_x3, rect_y3;
+int rect_x4, rect_y4;
 // coordinates of the triangle
 int tr_x1, tr_y1;
 int tr_x2, tr_y2;
@@ -50,10 +52,11 @@ struct Color
 // define global bndColor
 Color bColor;
 Color fColor;
+Color fColorR;
 
 Color getPixelColor(int x, int y);
 
-void drawRectBoundary(int x1,int y1, int x2, int y2);
+void drawRectBoundary(int x1,int y1, int x2, int y2,int x3, int y3,int x4, int y4);
 void drawTriangleBoundary(int x1, int y1, int x2, int y2, int x3, int y3);
 
 void boundaryFill_8N(int x, int y, Color fillColor, Color bColor);
@@ -64,7 +67,7 @@ float area(int x1, int y1, int x2, int y2, int x3, int y3);
 
 int main(int argc, char **argv)
 {
-	printf("\n******************** Welcome to Boundary Fill Algorithm Visualizer ***********************\n\n");
+	printf("\n******************** Welcome to Boundary Fill Algorithm - 8 Neighbours Visualizer ***********************\n\n");
 	printf("Visualize the Boundary Fill Algorithm for a Rectangle and a Triangle.\n");
 	printf("\nPlease Note: All coordinates must be strictly greater than (0,0) - i.e., they must lie in the first quadrant\n");
 
@@ -72,8 +75,12 @@ int main(int argc, char **argv)
 	printf("\n[DRAW RECTANGLE]\n");
 	printf("Enter a coordinates of the rectangle.\n");
 	scanf("%d %d",&rect_x1,&rect_y1);
-	printf("Enter the diagonally opposite coordinates of the rectangle.\n");
+	printf("Enter the second coordinates of the rectangle.\n");
 	scanf("%d %d",&rect_x2,&rect_y2);
+	printf("Enter the third coordinates of the rectangle.\n");
+	scanf("%d %d",&rect_x3,&rect_y3);
+	printf("Enter the second coordinates of the rectangle.\n");
+	scanf("%d %d",&rect_x4,&rect_y4);
 
 	// Input coordinates of the triangle
 	printf("\n[DRAW TRAINGLE]\n");
@@ -126,13 +133,18 @@ void myDisplay()
 	bColor.g = 0.0;
 	bColor.b = 0.0;
 
-	// define fill colors
+	// define fill colors for triangle
 	fColor.r = 1.0;
 	fColor.g = 1.0;
 	fColor.b = 0.0;
+
+	// define fill colors for rectangle
+	fColorR.r = 0.0;
+	fColorR.g = 0.0;
+	fColorR.b = 1.0;
 	
 	// First lets draw the boundary of the rectangle
-	drawRectBoundary(rect_x1,rect_y1,rect_x2,rect_y2);
+	drawRectBoundary(rect_x1,rect_y1,rect_x2,rect_y2,rect_x3,rect_y3,rect_x4,rect_y4);
 
 	// Now lets draw the boundary of the triangle
 	drawTriangleBoundary(tr_x1,tr_y1,tr_x2,tr_y2,tr_x3,tr_y3);
@@ -159,7 +171,7 @@ void boundaryFill_8N(int x, int y, Color fillColor, Color boundaryColor)
 }
 
 // Rectangle Draw Function
-void drawRectBoundary(int x1,int y1, int x2, int y2)
+void drawRectBoundary(int x1,int y1, int x2, int y2,int x3, int y3,int x4, int y4)
 {
 	// set the boundary colors
 	glColor3f(bColor.r,bColor.g,bColor.b);
@@ -168,9 +180,9 @@ void drawRectBoundary(int x1,int y1, int x2, int y2)
 	// Draw Rectangle
 	glBegin(GL_POLYGON);
 		glVertex2i(x1,y1);
-		glVertex2i(x2,y1);
 		glVertex2i(x2,y2);
-		glVertex2i(x1,y2);
+		glVertex2i(x3,y3);
+		glVertex2i(x4,y4);
 	glEnd();
 
 	glutSwapBuffers();
@@ -212,13 +224,18 @@ void mouseFcn(GLint button, GLint action, GLint x, GLint y)
 	cx = x;
 	cy = winHeight - y;
 
+	int flag;
+	flag = validateSeed(cx,cy);
+
 	switch(button)
 	{
 		case GLUT_LEFT_BUTTON:
 			if(action == GLUT_DOWN)
 			{
 				// give an initial validation to check if the seed point is within the triangle or rectangle
-				if(validateSeed(cx,cy) == 1)
+				if(flag == 1)
+					boundaryFill_8N(cx,cy,fColorR,bColor);
+				else if(flag == 2)
 					boundaryFill_8N(cx,cy,fColor,bColor);
 				else
 					printf("[BOUNDARY FILL] selected seed point is not within any shape.\n");
@@ -228,7 +245,6 @@ void mouseFcn(GLint button, GLint action, GLint x, GLint y)
 			break;
 	}
 }
-
 // Helper Function to get pixel color
 Color getPixelColor(int cx, int cy)
 {
@@ -254,18 +270,29 @@ void winReshapeFcn (GLint newWidth, GLint newHeight)
 // Validation function - to check if seed point is within one of the shapes
 int validateSeed(int x, int y)
 {
-	/* check if seed is within rectangle
-	 Fix the bottom-left and top-right points */
-	int bl_x,bl_y, rl_x, rl_y;
-	bl_x = rect_x1,	bl_y = rect_y1, rl_x = rect_x2,rl_y = rect_y2;
-	if(rect_x2 < rect_x1)
-	{	
-		rl_x = rect_x1; rl_y = rect_y1;
-		bl_y = rect_x2; bl_y = rect_y2;
-	}
+	int flag = 0;
 
-	if (x > bl_x && x < rl_x && y > bl_y && y < rl_y) 
-        return 1;
+	// check if seed is within rectangle
+	/* Calculate area of rectangle ABCD */
+    float A = area(rect_x1, rect_y1, rect_x2, rect_y2, rect_x3, rect_y3) +  
+              area(rect_x1, rect_y1, rect_x4, rect_y4, rect_x3, rect_y3); 
+  
+    /* Calculate area of triangle PAB */
+    float A1 = area(x, y, rect_x1, rect_y1, rect_x2, rect_y2); 
+  
+    /* Calculate area of triangle PBC */
+    float A2 = area(x, y, rect_x2, rect_y2, rect_x3, rect_y3); 
+  
+    /* Calculate area of triangle PCD */
+    float A3 = area(x, y, rect_x3, rect_y3, rect_x4, rect_y4); 
+  
+    /* Calculate area of triangle PAD */
+    float A4 = area(x, y, rect_x1, rect_y1, rect_x4, rect_y4); 
+  
+    /* Check if sum of A1, A2, A3 and A4  
+       is same as A */
+    if(A == A1 + A2 + A3 + A4)
+    	flag =  1;
  
 
 	// check if seed is within triangle
@@ -275,9 +302,12 @@ int validateSeed(int x, int y)
 	float area_3 = area(tr_x1,tr_y1,tr_x2,tr_y2,x,y);
 
 	if(area_full == area_1 + area_2 + area_3)
-		return 1;
+	{
+		if(flag == 1 && area_full < A)
+			flag = 2;
+	}
 
-	return 0;
+	return flag;
 }
 
 // Helper function
