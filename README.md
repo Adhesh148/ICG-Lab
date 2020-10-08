@@ -29,7 +29,8 @@ The lab begins with simple geometric algorithms and moves to exploring C/C++ lib
 
 * [Week-8](Week8/)
 > To Learn Interactive Computer Graphics. Implemented **Boundary Fill with 4 neighbors**, **Boundary Fill with 8 neighbors** and **Flood Fill Algorithm** with interactive seed point obtained on mouse click. There is a small problem with conversion of mouse coordinates to window coordinates for quadrants other than the first.  <br />
-> TODO : Check for Leaks in Boundary with 8 neighbors & Fix the Coordinate Issue (Mouse vs Window).
+> TODO : Fix the Coordinate Issue (Mouse vs Window). <br />
+> Found a leak with 8 neighbors (happened when shape within shape). Also have to handle shape within shape and intersecting shapes a bit more properly - Validate seed has to be refined.
 
 * [Week-9](Week9/)
 > TODO: PolyFill.
